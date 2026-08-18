@@ -6,7 +6,7 @@ const acts = [
     number: "01",
     label: "Arrival",
     title: "Take\nthe seat.",
-    body: "The chair is waiting. Scroll to begin Ibraheem's transformation ritual.",
+    body: "The chair is waiting. Scroll to begin the Lucky Prime transformation ritual.",
   },
   {
     number: "02",

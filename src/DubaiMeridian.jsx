@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { siteConfig } from "./siteConfig";
 
 const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 
@@ -74,9 +75,9 @@ export function DubaiMeridian() {
         />
 
         <div className="dubai-meridian__coordinates">
-          <span>25.2048° N</span>
+          <span>{siteConfig.coordinates.lat}</span>
           <i aria-hidden="true" />
-          <span>55.2708° E</span>
+          <span>{siteConfig.coordinates.lng}</span>
         </div>
 
         <div className="dubai-meridian__copy">
@@ -84,8 +85,8 @@ export function DubaiMeridian() {
         </div>
 
         <div className="dubai-meridian__location">
-          <p>Dubai / UAE</p>
-          <p lang="ar" dir="rtl">دبي</p>
+          <p>Meydan / Dubai, UAE</p>
+          <p lang="ar" dir="rtl">{siteConfig.arabicLocality || "ميدان دبي"}</p>
         </div>
 
         <p className="dubai-meridian__cue">Scroll to follow the light</p>
