@@ -54,6 +54,7 @@ export const siteConfig = {
     },
   ],
   images: {
+    logo: "/images/logo.png",
     hero: "/images/ibraheem-hero.webp",
     heroVideo: "/videos/ibraheem-hero.mp4",
     portrait: "/images/ibraheem-editorial-v2.webp",

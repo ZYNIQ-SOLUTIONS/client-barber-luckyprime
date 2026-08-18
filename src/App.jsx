@@ -86,74 +86,7 @@ function useReveal() {
   }, []);
 }
 
-function FreshaModal({ isOpen, onClose }) {
-  const [loaded, setLoaded] = useState(false);
-
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === "Escape") onClose();
-    };
-    if (isOpen) {
-      document.body.classList.add("modal-open");
-      window.addEventListener("keydown", handleKeyDown);
-    } else {
-      document.body.classList.remove("modal-open");
-      setLoaded(false);
-    }
-    return () => {
-      document.body.classList.remove("modal-open");
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [isOpen, onClose]);
-
-  if (!isOpen) return null;
-
-  return (
-    <div className="fresha-modal is-active" role="dialog" aria-modal="true" aria-label="Fresha Online Booking">
-      <div className="fresha-modal-backdrop" onClick={onClose} />
-      <div className="fresha-modal-dialog">
-        <div className="fresha-modal-header">
-          <div className="modal-title-wrap">
-            <span className="modal-badge"><Sparkle size={14} weight="fill" /> Official Booking Engine</span>
-            <h3>{siteConfig.fullName}</h3>
-          </div>
-          <div className="modal-header-actions">
-            <a
-              className="modal-external-link"
-              href={siteConfig.freshaUrl}
-              target="_blank"
-              rel="noreferrer"
-              title="Open Fresha in new tab"
-              aria-label="Open in new tab"
-            >
-              <ArrowUpRight size={18} />
-              <span className="modal-ext-text">Fresha App</span>
-            </a>
-            <button className="modal-close-btn" onClick={onClose} aria-label="Close booking modal">
-              <X size={20} />
-            </button>
-          </div>
-        </div>
-        <div className="fresha-modal-body">
-          {!loaded && (
-            <div className="modal-iframe-loader">
-              <div className="loader-spinner" />
-              <p>Connecting to Lucky Prime Fresha Booking...</p>
-            </div>
-          )}
-          <iframe
-            src={siteConfig.freshaUrl}
-            title="Fresha Online Booking - Lucky Prime Gents Salon"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            onLoad={() => setLoaded(true)}
-          />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function Navbar({ scrolled, onOpenBooking }) {
+function Navbar({ scrolled }) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -164,21 +97,25 @@ function Navbar({ scrolled, onOpenBooking }) {
   return (
     <header className={`site-header ${scrolled ? "is-scrolled" : ""}`}>
       <a className="wordmark" href="#top" aria-label="Lucky Prime Gents Salon Home">
-        <span className="wordmark-main">{siteConfig.name}</span>
-        <span className="wordmark-sub" lang="ar" dir="rtl">{siteConfig.arabicName}</span>
+        <img className="wordmark__emblem" src={siteConfig.images.logo} alt="Lucky Prime Logo" width="38" height="38" />
+        <div className="wordmark__titles">
+          <span className="wordmark-main">{siteConfig.name}</span>
+          <span className="wordmark-sub" lang="ar" dir="rtl">{siteConfig.arabicName}</span>
+        </div>
       </a>
       <nav className="desktop-nav" aria-label="Primary navigation">
         {navItems.map(([label, href]) => (
           <a href={href} key={href}>{label}</a>
         ))}
-        <button
-          type="button"
+        <a
           className="nav-book"
-          onClick={onOpenBooking}
+          href={siteConfig.freshaUrl}
+          target="_blank"
+          rel="noreferrer"
           aria-label="Book on Fresha"
         >
           Book Online
-        </button>
+        </a>
       </nav>
       <button
         className="menu-toggle"
@@ -193,8 +130,11 @@ function Navbar({ scrolled, onOpenBooking }) {
       <div className={`mobile-menu ${menuOpen ? "is-open" : ""}`} id="mobile-menu">
         <div className="mobile-menu__header">
           <div className="wordmark">
-            <span className="wordmark-main">{siteConfig.name}</span>
-            <span className="wordmark-sub" lang="ar" dir="rtl">{siteConfig.arabicName}</span>
+            <img className="wordmark__emblem" src={siteConfig.images.logo} alt="Lucky Prime Logo" width="40" height="40" />
+            <div className="wordmark__titles">
+              <span className="wordmark-main">{siteConfig.name}</span>
+              <span className="wordmark-sub" lang="ar" dir="rtl">{siteConfig.arabicName}</span>
+            </div>
           </div>
           <button
             className="mobile-menu__close"
@@ -214,17 +154,16 @@ function Navbar({ scrolled, onOpenBooking }) {
         </nav>
 
         <div className="mobile-menu-actions">
-          <button
-            type="button"
+          <a
             className="button button--sand button--mobile-action"
-            onClick={() => {
-              setMenuOpen(false);
-              onOpenBooking();
-            }}
+            href={siteConfig.freshaUrl}
+            target="_blank"
+            rel="noreferrer"
+            onClick={() => setMenuOpen(false)}
           >
             <CalendarCheck size={18} />
             Book on Fresha
-          </button>
+          </a>
           <a
             className="button button--whatsapp-green button--mobile-action"
             href={siteConfig.whatsappUrl}
@@ -254,7 +193,7 @@ function Navbar({ scrolled, onOpenBooking }) {
   );
 }
 
-function Hero({ offset, onOpenBooking }) {
+function Hero({ offset }) {
   return (
     <section className="hero" id="top" aria-labelledby="hero-title">
       <div className="hero__rail">
@@ -270,14 +209,15 @@ function Hero({ offset, onOpenBooking }) {
             <span className="hero__badge"><MapPin size={13} /> Meydan, Dubai</span>
           </div>
           <div className="hero__buttons">
-            <button
-              type="button"
+            <a
               className="button button--sand"
-              onClick={onOpenBooking}
+              href={siteConfig.freshaUrl}
+              target="_blank"
+              rel="noreferrer"
             >
               <CalendarCheck size={18} />
               Book on Fresha
-            </button>
+            </a>
             <a
               className="button button--outline"
               href={siteConfig.whatsappUrl}
@@ -362,7 +302,7 @@ function WorkGallery() {
   );
 }
 
-function Services({ onOpenBooking }) {
+function Services() {
   return (
     <section className="services" id="services" aria-labelledby="services-title">
       <div className="section-kicker section-kicker--services" data-reveal>
@@ -370,34 +310,40 @@ function Services({ onOpenBooking }) {
         <h2 id="services-title">Signature Menu</h2>
         <p>Tailored rituals. Tap any service to reserve your chair on Fresha.</p>
       </div>
-      {siteConfig.services.map((service, index) => (
-        <button
-          type="button"
-          className="service-row"
-          key={service.name}
-          onClick={onOpenBooking}
-          data-reveal
-          aria-label={`Book ${service.name} for ${service.price}`}
-        >
-          <span className="service-row__number">0{index + 1}</span>
-          <div className="service-row__main">
-            <div className="service-row__name-wrap">
-              <span className="service-row__name">{service.name}</span>
-              {service.featured && <span className="service-row__tag">Featured</span>}
+      <div className="services-list">
+        {siteConfig.services.map((service, index) => (
+          <a
+            className="service-row"
+            href={siteConfig.freshaUrl}
+            target="_blank"
+            rel="noreferrer"
+            key={service.name}
+            data-reveal
+            aria-label={`Book ${service.name} on Fresha for ${service.price}`}
+          >
+            <span className="service-row__number">0{index + 1}</span>
+            <div className="service-row__main">
+              <div className="service-row__name-wrap">
+                <span className="service-row__name">{service.name}</span>
+                {service.featured && <span className="service-row__tag">Featured</span>}
+              </div>
+              <p className="service-row__desc">{service.desc}</p>
             </div>
-            <p className="service-row__desc">{service.desc}</p>
-          </div>
-          <span className="service-row__price">{service.price}</span>
-          <span className="service-row__arrow-wrap">
-            <ArrowRight className="service-row__arrow" size={32} weight="thin" aria-hidden="true" />
-          </span>
-        </button>
-      ))}
+            <div className="service-row__meta">
+              <span className="service-row__price">{service.price}</span>
+              <span className="service-row__arrow-wrap">
+                <span className="service-row__cta-text">Book</span>
+                <ArrowRight className="service-row__arrow" size={24} weight="regular" aria-hidden="true" />
+              </span>
+            </div>
+          </a>
+        ))}
+      </div>
     </section>
   );
 }
 
-function About({ onOpenBooking }) {
+function About() {
   return (
     <section className="about section-dark" id="about" aria-labelledby="about-title">
       <div className="container about__container" data-reveal>
@@ -465,10 +411,15 @@ function About({ onOpenBooking }) {
         </div>
 
         <div className="about__actions">
-          <button type="button" className="button button--sand" onClick={onOpenBooking}>
+          <a
+            className="button button--sand"
+            href={siteConfig.freshaUrl}
+            target="_blank"
+            rel="noreferrer"
+          >
             <CalendarCheck size={18} />
             Reserve on Fresha
-          </button>
+          </a>
           <a className="button button--outline" href={siteConfig.whatsappUrl} target="_blank" rel="noreferrer">
             <WhatsappLogo size={18} weight="fill" />
             WhatsApp Inquiry
@@ -526,38 +477,33 @@ function LocationSection() {
       <div className="container location-grid" data-reveal>
         <div className="location-info">
           <p className="eyebrow">Visit the Salon /</p>
-          <h2 id="location-title">
-            Azizi Riviera<br />
-            Meydan, Dubai.
-          </h2>
+          <h2 id="location-title">Azizi Riviera, Meydan</h2>
           <p className="location-desc">
-            {siteConfig.address}
+            Located in the heart of Meydan Dubai, Lucky Prime Gents Salon offers private parking and a discrete, refined setting for your grooming appointments.
           </p>
-
           <div className="location-meta-list">
             <div className="location-meta-item">
-              <Clock size={20} />
+              <MapPin size={22} />
+              <div>
+                <strong>Location &amp; Address</strong>
+                <span>{siteConfig.address}</span>
+              </div>
+            </div>
+            <div className="location-meta-item">
+              <Clock size={22} />
               <div>
                 <strong>Working Hours</strong>
                 <span>{siteConfig.hours}</span>
               </div>
             </div>
             <div className="location-meta-item">
-              <Phone size={20} />
+              <Phone size={22} />
               <div>
                 <strong>Direct Line</strong>
                 <a href={`tel:${siteConfig.phoneNumber}`}>{siteConfig.phoneDisplay}</a>
               </div>
             </div>
-            <div className="location-meta-item">
-              <EnvelopeSimple size={20} />
-              <div>
-                <strong>Email</strong>
-                <a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>
-              </div>
-            </div>
           </div>
-
           <div className="location-actions">
             <a
               className="button button--sand"
@@ -566,30 +512,27 @@ function LocationSection() {
               rel="noreferrer"
             >
               <MapPin size={18} />
-              Get Directions in Google Maps
+              Google Maps Directions
             </a>
           </div>
         </div>
 
         <div className="location-map">
-          <div className="map-frame">
-            <iframe
-              title="Lucky Prime Gents Salon Location in Meydan Dubai"
-              src="https://www.google.com/maps?q=Azizi%20Riviera%20Building%2048%20Meydan%20Dubai&output=embed"
-              width="100%"
-              height="100%"
-              style={{ border: 0 }}
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-            />
-          </div>
+          <iframe
+            className="map-frame"
+            src="https://maps.google.com/maps?q=25.1764,55.3093&hl=en&z=15&output=embed"
+            title="Lucky Prime Gents Salon Location Map"
+            allowFullScreen=""
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+          />
         </div>
       </div>
     </section>
   );
 }
 
-function Contact({ onOpenBooking }) {
+function Contact() {
   return (
     <section className="contact" id="contact" aria-labelledby="contact-title">
       <div className="contact__title" data-reveal>
@@ -601,11 +544,16 @@ function Contact({ onOpenBooking }) {
       </div>
       <div className="contact__actions" data-reveal>
         <p>Ready when you are.</p>
-        <button type="button" className="contact-link" onClick={onOpenBooking}>
+        <a
+          className="contact-link"
+          href={siteConfig.freshaUrl}
+          target="_blank"
+          rel="noreferrer"
+        >
           <CalendarCheck size={28} />
           <span>Book on Fresha</span>
           <ArrowRight size={34} weight="thin" />
-        </button>
+        </a>
         <a className="contact-link" href={siteConfig.whatsappUrl} target="_blank" rel="noreferrer">
           <WhatsappLogo size={28} weight="fill" />
           <span>WhatsApp Inquiry</span>
@@ -631,7 +579,7 @@ function Contact({ onOpenBooking }) {
   );
 }
 
-function FinalCTA({ onOpenBooking }) {
+function FinalCTA() {
   return (
     <section className="final-cta section-dark" aria-labelledby="final-title">
       <div data-reveal>
@@ -642,14 +590,15 @@ function FinalCTA({ onOpenBooking }) {
         </h2>
       </div>
       <div className="final-cta__actions">
-        <button
-          type="button"
+        <a
           className="button button--sand button--large"
-          onClick={onOpenBooking}
+          href={siteConfig.freshaUrl}
+          target="_blank"
+          rel="noreferrer"
         >
           <CalendarCheck size={20} />
           Reserve on Fresha
-        </button>
+        </a>
         <a
           className="button button--cream button--large"
           href={siteConfig.whatsappUrl}
@@ -670,9 +619,12 @@ function Footer() {
     <footer className="footer section-dark">
       <div className="footer__brand-wrap">
         <a className="wordmark" href="#top">
-          {siteConfig.name}
+          <img className="wordmark__emblem footer__emblem" src={siteConfig.images.logo} alt="Lucky Prime Logo" width="46" height="46" />
+          <div className="wordmark__titles">
+            <span className="wordmark-main">{siteConfig.name}</span>
+            <span className="footer__arabic" lang="ar" dir="rtl">{siteConfig.arabicName}</span>
+          </div>
         </a>
-        <span className="footer__arabic" lang="ar" dir="rtl">{siteConfig.arabicName}</span>
       </div>
       <p>
         {siteConfig.role} — {siteConfig.address}
@@ -691,27 +643,23 @@ function Footer() {
 
 export function App() {
   const { scrolled, heroOffset, contactReached } = usePageMotion();
-  const [bookingOpen, setBookingOpen] = useState(false);
   useReveal();
-
-  const handleOpenBooking = () => setBookingOpen(true);
-  const handleCloseBooking = () => setBookingOpen(false);
 
   return (
     <>
-      <Navbar scrolled={scrolled} onOpenBooking={handleOpenBooking} />
+      <Navbar scrolled={scrolled} />
       <main>
-        <Hero offset={heroOffset} onOpenBooking={handleOpenBooking} />
+        <Hero offset={heroOffset} />
         <WorkGallery />
         <CutRitual />
         <DubaiMeridian />
-        <Services onOpenBooking={handleOpenBooking} />
-        <About onOpenBooking={handleOpenBooking} />
+        <Services />
+        <About />
         <PrecisionArtifact />
         <ImageBreak />
         <LocationSection />
-        <Contact onOpenBooking={handleOpenBooking} />
-        <FinalCTA onOpenBooking={handleOpenBooking} />
+        <Contact />
+        <FinalCTA />
       </main>
       <Footer />
 
@@ -720,15 +668,16 @@ export function App() {
         className={`floating-actions ${scrolled && !contactReached ? "is-visible" : ""}`}
         aria-hidden={!scrolled || contactReached}
       >
-        <button
-          type="button"
+        <a
           className="floating-btn floating-btn--fresha"
-          onClick={handleOpenBooking}
+          href={siteConfig.freshaUrl}
+          target="_blank"
+          rel="noreferrer"
           aria-label="Book on Fresha"
         >
           <CalendarCheck size={20} />
           <span>Book on Fresha</span>
-        </button>
+        </a>
         <a
           className="floating-btn floating-btn--whatsapp"
           href={siteConfig.whatsappUrl}
@@ -739,9 +688,6 @@ export function App() {
           <WhatsappLogo size={24} weight="fill" />
         </a>
       </div>
-
-      {/* Dedicated Fresha Booking Modal */}
-      <FreshaModal isOpen={bookingOpen} onClose={handleCloseBooking} />
     </>
   );
 }
